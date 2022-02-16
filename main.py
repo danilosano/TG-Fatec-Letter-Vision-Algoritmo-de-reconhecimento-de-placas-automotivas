@@ -9,11 +9,7 @@ img = cv2.resize(img, (720, 480))
 hImg, wImg, _ = img.shape
 
 boximg = pytesseract.image_to_boxes(img)
-chars = boximg.splitlines()
 
-lenght = len(chars)
-
-print(chars[4])
 Text = ""
 for b in boximg.splitlines():
   b = b.split(' ')
