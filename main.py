@@ -3,7 +3,7 @@ import cv2
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
-img = cv2.imread('alo.jpg')
+img = cv2.imread('teste.jpg')
 img = cv2.resize(img, (720, 480))
 
 hImg, wImg, _ = img.shape
@@ -11,6 +11,7 @@ hImg, wImg, _ = img.shape
 boximg = pytesseract.image_to_boxes(img)
 
 Text = ""
+
 for b in boximg.splitlines():
   b = b.split(' ')
   x, y, w, h = int(b[1]), int(b[2]), int(b[3]), int(b[4])
