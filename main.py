@@ -1,25 +1,44 @@
-import pytesseract
 import cv2
+import pytesseract
+cv2.CascadeClassifier
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files (x86)\Tesseract-OCR\tesseract.exe'
 
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+arqCasc1 = 'br.xml'
+faceCascade1 = cv2.CascadeClassifier(arqCasc1) #classificador para o rosto
+hImg = 1080
+wImg = 1920
+webcam = cv2.VideoCapture(0, cv2.CAP_DSHOW)  #instancia o uso da webcam
 
-img = cv2.imread('teste.jpg')
-img = cv2.resize(img, (720, 480))
 
-hImg, wImg, _ = img.shape
+while True:
+    s, imagem = webcam.read() #pega efeticamente a imagem da webcam
+    
+    faces = faceCascade1.detectMultiScale(
+        imagem,
+        minNeighbors=20,
+        minSize=(30, 30),
+	maxSize=(300,300)
+        
+    )
 
-boximg = pytesseract.image_to_boxes(img)
+    for (x, y, w, h) in faces:
+        cv2.rectangle(imagem, (x, y), (x+w, y+h), (0, 255, 0), 4)
+        boximg = pytesseract.image_to_boxes(imagem)
+        Text = ""
+        for b in boximg.splitlines():
+            b = b.split(' ')
+            x, y, w, h = int(b[1]), int(b[2]), int(b[3]), int(b[4])
+            Text += b[0]
+            cv2.rectangle(imagem, (x, y), (x+w, y+h), (0, 255, 0), 4)
+            cv2.putText(imagem, b[0], (x, hImg - y + 13), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (50, 205, 50), 1)
+        print(Text)
+    
 
-Text = ""
+    cv2.imshow('Video', imagem) #mostra a imagem captura na janela
 
-for b in boximg.splitlines():
-  b = b.split(' ')
-  x, y, w, h = int(b[1]), int(b[2]), int(b[3]), int(b[4])
+    #o trecho seguinte e apenas para parar o codigo e fechar a janela
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
 
-  Text += b[0]
-  cv2.rectangle(img, (x, hImg - y), (w, hImg - h), (50, 50, 255), 1)
-  cv2.putText(img, b[0], (x, hImg - y + 13), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (50, 205, 50), 1)
-
-print(Text)
-cv2.imshow('Detected text', img)
-cv2.waitKey(0)
+webcam.release() #dispensa o uso da webcam
+cv2.destroyAllWindows() #fecha todas a janelas abertas
