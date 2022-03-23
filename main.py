@@ -3,8 +3,8 @@ import pytesseract
 cv2.CascadeClassifier
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files (x86)\Tesseract-OCR\tesseract.exe'
 
-arqCasc1 = 'br.xml'
-faceCascade1 = cv2.CascadeClassifier(arqCasc1)
+placasXml = 'br.xml'
+placasCascade = cv2.CascadeClassifier(placasXml)
 hImg = 1080
 wImg = 1920
 webcam = cv2.VideoCapture(0, cv2.CAP_DSHOW) 
@@ -13,7 +13,7 @@ webcam = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 while True:
     s, imagem = webcam.read() 
     
-    faces = faceCascade1.detectMultiScale(
+    faces = placasCascade.detectMultiScale(
         imagem,
         minNeighbors=20,
         minSize=(30, 30),
@@ -40,5 +40,3 @@ while True:
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
-webcam.release()
-cv2.destroyAllWindows()
