@@ -1,5 +1,5 @@
 import cv2, pytesseract, os
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files (x86)\Tesseract-OCR\tesseract.exe'
 
 placasXml = 'br.xml'
 placasCascade = cv2.CascadeClassifier(placasXml)
@@ -15,15 +15,19 @@ cont = 0
 for item in dirs:
     contTotal += 1
     Text = ""
-    imagemInput = cv2.imread("images/"+item)
-    nomeArquivoAtual = item.replace('.jpg', '')
+    imagemInput = cv2.imread("images/"+item)    
+    nomeArquivoAtual = item.replace('.jpg', '')    
     nomeArquivoAtual = nomeArquivoAtual.replace('.JPG', '')
     nomeArquivoAtual = nomeArquivoAtual.replace('-', '')
+    nomeArquivoAtual = nomeArquivoAtual.replace('(1)', '')
+    nomeArquivoAtual = nomeArquivoAtual.replace('(2)', '')
+    nomeArquivoAtual = nomeArquivoAtual.replace('-1', '')
+    nomeArquivoAtual = nomeArquivoAtual.replace('-2', '')
 
     hImg, wImg, _ = imagemInput.shape
 
     imagemInput = cv2.cvtColor(imagemInput, cv2.COLOR_BGR2GRAY)
-    blur = cv2.GaussianBlur(imagemInput,(8,8),0)
+    blur = cv2.GaussianBlur(imagemInput,(5,5),0)
 
     placas = placasCascade.detectMultiScale(
             blur,
@@ -41,6 +45,11 @@ for item in dirs:
         Text = Text.replace('-', '')
         Text = Text.replace(':', '')
         Text = Text.replace('!', '')
+        Text = Text.replace(' ', '')
+        Text = Text.replace('`', '')
+        Text = Text.replace('|', '')
+        Text = Text.replace('.', '')
+        Text = Text.replace('‘', '')
         print(Text + " foi o texto achado na placa:"+ nomeArquivoAtual)
         if(Text.find(nomeArquivoAtual) > -1):
             acertos += 1
