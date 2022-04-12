@@ -25,14 +25,12 @@ for item in dirs:
     nomeArquivoAtual = nomeArquivoAtual.replace('-2', '')
 
     hImg, wImg, _ = imagemInput.shape
-
-    imagemInput = cv2.cvtColor(imagemInput, cv2.COLOR_BGR2GRAY)
-    blur = cv2.GaussianBlur(imagemInput,(5,5),0)
+    imagemInput = cv2.GaussianBlur(imagemInput, (5,5), 0)
 
     placas = placasCascade.detectMultiScale(
-            blur,
+            imagemInput,
             minNeighbors=10,
-            minSize=(60, 60)
+            minSize=(40, 40)
         )
 
     for (x, y, w, h) in placas:
@@ -50,6 +48,7 @@ for item in dirs:
         Text = Text.replace('|', '')
         Text = Text.replace('.', '')
         Text = Text.replace('‘', '')
+        Text = Text.replace('/', '')
         print(Text + " foi o texto achado na placa:"+ nomeArquivoAtual)
         if(Text.find(nomeArquivoAtual) > -1):
             acertos += 1
