@@ -24,7 +24,6 @@ for item in dirs:
     nomeArquivoAtual = nomeArquivoAtual.replace('-1', '')
     nomeArquivoAtual = nomeArquivoAtual.replace('-2', '')
 
-    hImg, wImg, _ = imagemInput.shape
     imagemInput = cv2.GaussianBlur(imagemInput, (5,5), 0)
 
     placas = placasCascade.detectMultiScale(
@@ -37,7 +36,11 @@ for item in dirs:
         cont += 1
         recortePlaca = imagemInput[y:y + h, x:x + w]
 
-        Text = pytesseract.image_to_string(recortePlaca, lang="eng")
+        Text = pytesseract.image_to_boxes(recortePlaca)
+
+        for b in Text.splitlines():
+            b = b.split(' ')
+            Text += b[0]
 
         Text = Text.replace('~', '')
         Text = Text.replace('-', '')
@@ -49,6 +52,8 @@ for item in dirs:
         Text = Text.replace('.', '')
         Text = Text.replace('‘', '')
         Text = Text.replace('/', '')
+        Text = Text.replace('>', '')
+        Text = Text.replace('<', '')
         print(Text + " foi o texto achado na placa:"+ nomeArquivoAtual)
         if(Text.find(nomeArquivoAtual) > -1):
             acertos += 1
@@ -65,5 +70,6 @@ TaxaErro = str(TaxaErro)
 print("Total de arquivos percorridos:" + contTotalText +"\nTotal de placas encontradas:" + contText + 
 "\nTotal de acertos: " + TaxaAcerto +
 "%\nTotal de erros: " + TaxaErro+"%")
+cv2.waitKey(0)
 
 
