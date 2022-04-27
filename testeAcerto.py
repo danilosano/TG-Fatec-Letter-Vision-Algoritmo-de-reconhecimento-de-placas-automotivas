@@ -24,23 +24,21 @@ for item in dirs:
     nomeArquivoAtual = nomeArquivoAtual.replace('-1', '')
     nomeArquivoAtual = nomeArquivoAtual.replace('-2', '')
 
-    imagemInput = cv2.GaussianBlur(imagemInput, (5,5), 0)
+    imagemInput = cv2.cvtColor(imagemInput, cv2.COLOR_BGR2GRAY)
+    imagemInput = cv2.GaussianBlur(imagemInput, (9,9), 0)
 
     placas = placasCascade.detectMultiScale(
             imagemInput,
-            minNeighbors=10,
-            minSize=(40, 40)
+            scaleFactor=1.05,
+            minNeighbors=5,
+            minSize=(30, 30)
         )
 
     for (x, y, w, h) in placas:
         cont += 1
         recortePlaca = imagemInput[y:y + h, x:x + w]
 
-        Text = pytesseract.image_to_boxes(recortePlaca)
-
-        for b in Text.splitlines():
-            b = b.split(' ')
-            Text += b[0]
+        Text = pytesseract.image_to_string(recortePlaca)
 
         Text = Text.replace('~', '')
         Text = Text.replace('-', '')
@@ -71,5 +69,3 @@ print("Total de arquivos percorridos:" + contTotalText +"\nTotal de placas encon
 "\nTotal de acertos: " + TaxaAcerto +
 "%\nTotal de erros: " + TaxaErro+"%")
 cv2.waitKey(0)
-
-

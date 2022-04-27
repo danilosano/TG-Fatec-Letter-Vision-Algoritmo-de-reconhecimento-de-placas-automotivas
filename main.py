@@ -15,9 +15,8 @@ while True:
     
     faces = placasCascade.detectMultiScale(
         imagem,
-        minNeighbors=20,
-        minSize=(30, 30),
-	maxSize=(300,300)
+        minNeighbors=5,
+        minSize=(30, 30)
         
     )
 
